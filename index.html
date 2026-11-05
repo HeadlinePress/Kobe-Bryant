@@ -226,13 +226,13 @@ main{overflow-x:auto}
 <header class="top">
   <div class="logo"><i aria-hidden="true">R</i><div><b id="btitle">Read/Write Studio</b><small id="grade">Reading &amp; Writing</small></div></div>
   <div class="prog" aria-label="Lesson progress"><div class="bar"><span id="pbar" style="width:0%"></span></div><em id="ptxt"></em></div>
-  <div class="me" id="who"></div>
+  <div class="me" id="who"></div><button id="resetTop" type="button" class="chip" title="Erase all typing, drawing, and answers and begin again">↺ Start over and clear all work</button>
 </header>
 <div class="shell">
   <nav class="rail" id="steps" aria-label="Lesson steps"></nav>
   <main id="main"><p class="note">Loading lesson…</p></main>
 </div>
-<footer class="foot"><span>Your answers save automatically in this browser.</span><button id="pdfOpen" type="button" title="Choose pages and make a PDF to print or send">⬇ Print / PDF</button><button id="saveProg" type="button" title="Saves a small file so you can finish later. To share your work with your teacher, use Download my work (PDF).">Save to finish later</button><button id="resetBtn" type="button">Start over</button><span style="margin-left:auto"></span><button id="teachBtn" type="button">Teacher tools</button></footer>
+<footer class="foot"><span>Your answers save automatically in this browser.</span><button id="pdfOpen" type="button" title="Choose pages and make a PDF to print or send">⬇ Print / PDF</button><button id="saveProg" type="button" title="Saves a small file so you can finish later. To share your work with your teacher, use Download my work (PDF).">Save to finish later</button><button id="resetBtn" type="button">Start over and clear all work</button><span style="margin-left:auto"></span><button id="teachBtn" type="button">Teacher tools</button></footer>
 <div class="rul" id="rul" hidden><i></i><i></i></div><div class="pop" id="pop" hidden></div>
 <div class="toast" id="toast" role="status"></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
@@ -498,8 +498,8 @@ async function downloadPdf(){const msg=$('#pdfMsg'),btn=$('#pdfGo');btn.disabled
 function confetti(){if(matchMedia('(prefers-reduced-motion: reduce)').matches||confetti.done)return;confetti.done=true;const c=$('#confetti'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
  const P=Array.from({length:140},()=>({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*14-4,r:Math.random()*6+4,c:['#ffc23d','#43e0a8','#ff7a8a','#b98bff','#fff'][Math.floor(Math.random()*5)],a:Math.random()*6}));let f=0;
  (function tick(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.vx*=.99;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});if(++f<180)requestAnimationFrame(tick);else x.clearRect(0,0,c.width,c.height)})()}
-$('#saveProg').onclick=saveProgress;$('#pdfOpen').onclick=openPdf;$('#teachBtn').onclick=teacherTools;setInterval(()=>{const t=$('#teachBtn');if(t&&S)t.hidden=!!S.locked},1000);addEventListener('hashchange',()=>{applyHash();render()});
-let armed=false;$('#resetBtn').onclick=()=>{const b=$('#resetBtn');if(!armed){armed=true;b.textContent='Tap again to erase everything';setTimeout(()=>{armed=false;b.textContent='Start over'},4000);return}armed=false;b.textContent='Start over';const lk=S.locked?{l:S.level,k:S.lockKey,a:S.acts}:null;S=fresh();if(lk){S.level=lk.l;S.locked=true;S.lockKey=lk.k;S.acts=lk.a}save();render()};
+$('#saveProg').onclick=saveProgress;$('#resetTop').onclick=()=>{if(!confirm('Start over and clear all work? This erases your typing, drawing, and answers on this device.'))return;const lk=S.locked?{l:S.level,k:S.lockKey,a:S.acts}:null;S=fresh();if(lk){S.level=lk.l;S.locked=true;S.lockKey=lk.k;S.acts=lk.a}save();render();scrollTo({top:0})};$('#pdfOpen').onclick=openPdf;$('#teachBtn').onclick=teacherTools;setInterval(()=>{const t=$('#teachBtn');if(t&&S)t.hidden=!!S.locked},1000);addEventListener('hashchange',()=>{applyHash();render()});
+let armed=false;$('#resetBtn').onclick=()=>{const b=$('#resetBtn');if(!armed){armed=true;b.textContent='Tap again to clear everything';setTimeout(()=>{armed=false;b.textContent='Start over and clear all work'},4000);return}armed=false;b.textContent='Start over and clear all work';const lk=S.locked?{l:S.level,k:S.lockKey,a:S.acts}:null;S=fresh();if(lk){S.level=lk.l;S.locked=true;S.lockKey=lk.k;S.acts=lk.a}save();render()};
 </script>
 
 </body></html>
