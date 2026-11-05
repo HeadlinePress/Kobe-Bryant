@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><script>(function(){try{if(location.protocol==='file:')return;var x=new XMLHttpRequest();x.open('HEAD','data/manifest.js',false);x.send();if(x.status>=400){var y=new XMLHttpRequest();y.open('HEAD','data/data/manifest.js',false);y.send();if(y.status<400)document.write('<base href="data/">')}}catch(e){}})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="data/manifest.js"></script>
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}@media(max-width:700px){#resetTop{display:none}}</style></head><body>
 <title>Read/Write Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;600&family=Atkinson+Hyperlegible:wght@400;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
@@ -283,7 +283,7 @@ start(){return `<div class="hero"><div class="stack" style="gap:18px">
   <div class="chips"><span>${M.slides} intro slides</span><span>${M.levels.length} reading levels</span><span>${M.sections.length} activities</span></div>
   <div class="form2"><label class="field" for="sname">What’s your name?<input class="inp" id="sname" type="text" autocomplete="name" value="${esc(S.name)}" placeholder="First and last name"></label>
   <label class="field" for="scls">Class period<input class="inp" id="scls" type="text" value="${esc(S.cls)}" placeholder="e.g. 3"></label></div></div>
-  <div class="resume"><label class="chip" for="loadProg">↥ Continue a saved lesson</label><input type="file" id="loadProg" accept=".lessonplayer,.json,application/json" hidden><span class="note" id="loadMsg"></span></div></div>
+  <div class="resume"><label class="chip" for="loadProg">↥ Continue a saved lesson</label><input type="file" id="loadProg" accept=".lessonplayer,.json,application/json" hidden><span class="note" id="loadMsg"></span><button type="button" class="chip" id="resetWelcome" style="border-color:#ffd166;color:#ffd166;padding:10px 16px;font-size:14px">↺ Start over and clear all work</button></div></div>
   <div class="covers" aria-hidden="true"><img src="slides/1.jpg" alt=""></div></div>`},
 slides(){const i=S.slide||1;return `<div><div class="kicker">Smartboard lesson</div><h1 class="h1">Lesson Intro</h1></div>
  <div style="max-width:1000px"><div class="stage" id="stage"><img id="simg" src="slides/${i}.jpg" alt="Slide ${i} of ${M.slides}"><span class="cnt" id="sc">${i} / ${M.slides}</span></div>
@@ -421,7 +421,7 @@ function paint(x,strokes,w,h){strokes.forEach(s=>{x.save();x.lineCap='round';x.l
 
 function wire(step){
  $$('[data-go]').forEach(b=>b.onclick=()=>go(cur+ +b.dataset.go));
- if(step.id==='start'){$('#loadProg').onchange=e=>{const f=e.target.files[0];if(f)loadProgress(f,$('#loadMsg'))};const n=$('#sname'),nb=$('[data-go="1"]');n.oninput=()=>{S.name=n.value;save();nb.disabled=!n.value.trim()};$('#scls').oninput=e=>{S.cls=e.target.value;save()}}
+ if(step.id==='start'){$('#resetWelcome').onclick=()=>$('#resetTop').click();$('#loadProg').onchange=e=>{const f=e.target.files[0];if(f)loadProgress(f,$('#loadMsg'))};const n=$('#sname'),nb=$('[data-go="1"]');n.oninput=()=>{S.name=n.value;save();nb.disabled=!n.value.trim()};$('#scls').oninput=e=>{S.cls=e.target.value;save()}}
  if(step.id==='slides'){const show=i=>{S.slide=((i-1+M.slides)%M.slides)+1;save();$('#simg').src=`slides/${S.slide}.jpg`;$('#sc').textContent=`${S.slide} / ${M.slides}`;$$('#thumbs img').forEach(t=>{const on=+t.dataset.k===S.slide;t.classList.toggle('on',on);if(on)t.scrollIntoView({block:'nearest',inline:'nearest'})})};$$('#thumbs img').forEach(t=>t.onclick=()=>show(+t.dataset.k));
   $('#prev').onclick=()=>show(S.slide-1);$('#nxt').onclick=()=>show(S.slide+1);$('#stage').onclick=()=>show(S.slide+1);$('#full').onclick=()=>{try{$('#stage').requestFullscreen?.().catch(()=>{})}catch(e){}};
   document.onkeydown=e=>{if(stepList()[cur]?.id!=='slides')return;if(e.key==='ArrowRight')show(S.slide+1);if(e.key==='ArrowLeft')show(S.slide-1)}}
